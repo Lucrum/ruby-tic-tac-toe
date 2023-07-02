@@ -7,7 +7,7 @@ class TicTacToe
     @player_two = player_two
     @board = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     @victor = nil
-
+    @turn_count = 1
     # true = player one's turn, false = player two's turn
     @player_turn = true
   end
@@ -15,31 +15,32 @@ class TicTacToe
   def play
     # core game loop
     until @victor
-      if @player_one_turn
+      if @player_turn
         prompt(@player_one)
       else
         prompt(@player_two)
       end
 
-      @player_one_turn = !@player_one_turn
+      @player_turn = !@player_turn
       check_victory
     end
     finish_game
   end
 
   def prompt(player)
-    puts "#{player.name}, please pick a square \n"
+    puts "\n #{player.name}, please pick a square \n"
     render_board
     choice = player_choice
     take_spot(choice, player.symbol)
   end
 
   def render_board
+    print "\n"
     @board.length.times do |i|
       puts " #{@board[i][0]} | #{@board[i][1]} | #{@board[i][2]} "
       puts '---+---+---' if i < @board.length - 1
     end
-    # puts "\n"
+    print "\n"
   end
 
   def player_choice
@@ -67,13 +68,20 @@ class TicTacToe
   end
 
   def finish_game
-    puts "#{@victor.name} has won!"
+    if @victor == true
+      puts "\n It's a tie!"
+    else
+      puts "\n #{@victor.name} has won!"
+    end
   end
 
   def check_victory
     check_rows
     check_cols
     check_diags
+
+    @victor = true if @turn_count == 9 && @victor.nil?
+    @turn_count += 1
   end
 
   def check_rows
